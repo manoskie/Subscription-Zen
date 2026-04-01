@@ -1,0 +1,23 @@
+# ── Compiled class files ──
+out/
+*.class
+
+# ── Environment / secrets ──
+.env
+
+# ── IDE & editor configs ──
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+*.swp
+*~
+
+# ── OS junk ──
+.DS_Store
+Thumbs.db
+
+# ── Logs ──
+*.log
