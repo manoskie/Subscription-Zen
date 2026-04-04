@@ -21,3 +21,8 @@ Thumbs.db
 
 # ── Logs ──
 *.log
+
+# ── Scripts and Task Files ──
+FileCutter.*
+PathUpdater.*
+team_task_distribution.md
