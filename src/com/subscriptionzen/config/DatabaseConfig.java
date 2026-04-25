@@ -20,7 +20,7 @@ public class DatabaseConfig {
             : "root";
     private static final String PASSWORD = System.getenv("DB_PASSWORD") != null
             ? System.getenv("DB_PASSWORD")
-            : "";
+            : "1612";
 
     // ── Static block to load the JDBC driver ────────────────
     static {

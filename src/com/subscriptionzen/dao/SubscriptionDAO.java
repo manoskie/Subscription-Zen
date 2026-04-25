@@ -27,4 +27,16 @@ public interface SubscriptionDAO {
      * expense.
      */
     double getMonthlyExpense(int userId) throws SQLException;
+
+    /**
+     * Calls the stored procedure sp_get_all_users_monthly_expense to get total monthly
+     * expense for all users.
+     */
+    java.util.Map<Integer, Double> getAllUsersMonthlyExpense() throws SQLException;
+
+    /**
+     * Calls the MySQL function fn_days_until_renewal to get the number of
+     * days remaining until the next renewal date.
+     */
+    int getDaysUntilRenewal(int subscriptionId) throws SQLException;
 }

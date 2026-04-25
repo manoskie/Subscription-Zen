@@ -164,3 +164,11 @@ This project is for academic / educational purposes. Feel free to use and modify
 ---
 
 <p align="center">Made with ☕ and 🧘 by <b>Manan</b></p>
+
+
+<!-- For rahil -->
+# Step 1: Recompile the source file into the 'out' directory
+javac -d "d:\AllProjects\SubscriptionZen\Subscription-Zen\out" "d:\AllProjects\SubscriptionZen\Subscription-Zen\src\com\subscriptionzen\Main.java"
+
+# Step 2: Run the updated code
+java -cp "d:\AllProjects\SubscriptionZen\Subscription-Zen\out;C:\Users\rahil\Downloads\mysql-connector-j-9.6.0\mysql-connector-j-9.6.0\mysql-connector-j-9.6.0.jar" com.subscriptionzen.Main

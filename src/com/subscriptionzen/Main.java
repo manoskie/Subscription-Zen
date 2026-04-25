@@ -15,26 +15,26 @@ import java.util.Scanner;
 
 /**
  * ╔══════════════════════════════════════════════════════════╗
- * ║              SUBSCRIPTION ZEN — CLI                     ║
- * ║    Manage your subscriptions from the command line      ║
+ * ║ SUBSCRIPTION ZEN — CLI ║
+ * ║ Manage your subscriptions from the command line ║
  * ╚══════════════════════════════════════════════════════════╝
  *
  * Demonstrates: Scanner-based CLI, Exception Handling (try-catch),
- *               OOP concepts (services layer), ArrayList, custom exceptions.
+ * OOP concepts (services layer), ArrayList, custom exceptions.
  */
 public class Main {
 
     // ── Service instances ───────────────────────────────────
-    private static UserService userService             = new UserService();
+    private static UserService userService = new UserService();
     private static SubscriptionService subscriptionService = new SubscriptionService();
-    private static PaymentService paymentService       = new PaymentService();
-    private static CategoryService categoryService     = new CategoryService();
-    private static AlertService alertService           = new AlertService();
+    private static PaymentService paymentService = new PaymentService();
+    private static CategoryService categoryService = new CategoryService();
+    private static AlertService alertService = new AlertService();
 
     private static Scanner scanner = new Scanner(System.in);
 
     // ══════════════════════════════════════════════════════════
-    //  MAIN METHOD
+    // MAIN METHOD
     // ══════════════════════════════════════════════════════════
     public static void main(String[] args) {
         System.out.println("╔══════════════════════════════════════════════════════════╗");
@@ -49,12 +49,27 @@ public class Main {
 
             try {
                 switch (choice) {
-                    case 1: userMenu();          break;
-                    case 2: subscriptionMenu();  break;
-                    case 3: paymentMenu();       break;
-                    case 4: categoryMenu();      break;
-                    case 5: alertMenu();         break;
-                    case 6: monthlyExpenseReport(); break;
+                    case 1:
+                        userMenu();
+                        break;
+                    case 2:
+                        subscriptionMenu();
+                        break;
+                    case 3:
+                        paymentMenu();
+                        break;
+                    case 4:
+                        categoryMenu();
+                        break;
+                    case 5:
+                        alertMenu();
+                        break;
+                    case 6:
+                        monthlyExpenseReport();
+                        break;
+                    case 7:
+                        daysUntilRenewal();
+                        break;
                     case 0:
                         running = false;
                         System.out.println("\nGoodbye! Keep your subscriptions zen.");
@@ -70,7 +85,7 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  MAIN MENU
+    // MAIN MENU
     // ══════════════════════════════════════════════════════════
     private static void printMainMenu() {
         System.out.println("\n========== MAIN MENU ==========");
@@ -80,12 +95,13 @@ public class Main {
         System.out.println("  4. Category Management");
         System.out.println("  5. Alert Management");
         System.out.println("  6. Monthly Expense Report");
+        System.out.println("  7. Days Until Renewal (Function)");
         System.out.println("  0. Exit");
         System.out.println("===============================");
     }
 
     // ══════════════════════════════════════════════════════════
-    //  1. USER MANAGEMENT
+    // 1. USER MANAGEMENT
     // ══════════════════════════════════════════════════════════
     private static void userMenu() {
         boolean back = false;
@@ -101,13 +117,26 @@ public class Main {
             int choice = readIntSafe("Choose: ");
             try {
                 switch (choice) {
-                    case 1: registerUser();  break;
-                    case 2: viewAllUsers();  break;
-                    case 3: findUserById();  break;
-                    case 4: updateUser();    break;
-                    case 5: deleteUser();    break;
-                    case 0: back = true;     break;
-                    default: System.out.println("[!] Invalid option.");
+                    case 1:
+                        registerUser();
+                        break;
+                    case 2:
+                        viewAllUsers();
+                        break;
+                    case 3:
+                        findUserById();
+                        break;
+                    case 4:
+                        updateUser();
+                        break;
+                    case 5:
+                        deleteUser();
+                        break;
+                    case 0:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("[!] Invalid option.");
                 }
             } catch (CustomUserNotFoundException e) {
                 System.out.println("[USER ERROR] " + e.getMessage());
@@ -142,8 +171,7 @@ public class Main {
                     String.valueOf(u.getUserId()),
                     u.getName(),
                     u.getEmail(),
-                    u.getCreatedAt() != null ? u.getCreatedAt().toString() : "N/A"
-            ));
+                    u.getCreatedAt() != null ? u.getCreatedAt().toString() : "N/A"));
         }
         System.out.println(StringUtils.buildTableSeparator(4));
     }
@@ -162,8 +190,10 @@ public class Main {
         System.out.print("  New Email (current: " + user.getEmail() + "): ");
         String email = scanner.nextLine();
 
-        if (!name.trim().isEmpty()) user.setName(name.trim());
-        if (!email.trim().isEmpty()) user.setEmail(email.trim());
+        if (!name.trim().isEmpty())
+            user.setName(name.trim());
+        if (!email.trim().isEmpty())
+            user.setEmail(email.trim());
         userService.updateUser(user);
         System.out.println("  [OK] User updated.");
     }
@@ -175,11 +205,13 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  2. SUBSCRIPTION MANAGEMENT
+    // 2. SUBSCRIPTION MANAGEMENT
     // ══════════════════════════════════════════════════════════
     private static void subscriptionMenu() {
         boolean back = false;
         while (!back) {
+            System.out.println(
+                    "\n---!!!NOTE!!!: Please have a look at catagory first to check the ID's of all Categories. ---");
             System.out.println("\n--- Subscription Management ---");
             System.out.println("  1. Add Subscription");
             System.out.println("  2. View My Subscriptions (by User ID)");
@@ -192,14 +224,29 @@ public class Main {
             int choice = readIntSafe("Choose: ");
             try {
                 switch (choice) {
-                    case 1: addSubscription();       break;
-                    case 2: viewUserSubscriptions();  break;
-                    case 3: viewAllSubscriptions();   break;
-                    case 4: updateSubscription();     break;
-                    case 5: deleteSubscription();     break;
-                    case 6: findSubscriptionById();   break;
-                    case 0: back = true;              break;
-                    default: System.out.println("[!] Invalid option.");
+                    case 1:
+                        addSubscription();
+                        break;
+                    case 2:
+                        viewUserSubscriptions();
+                        break;
+                    case 3:
+                        viewAllSubscriptions();
+                        break;
+                    case 4:
+                        updateSubscription();
+                        break;
+                    case 5:
+                        deleteSubscription();
+                        break;
+                    case 6:
+                        findSubscriptionById();
+                        break;
+                    case 0:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("[!] Invalid option.");
                 }
             } catch (InvalidSubscriptionException e) {
                 System.out.println("[SUBSCRIPTION ERROR] " + e.getMessage());
@@ -212,16 +259,16 @@ public class Main {
     }
 
     private static void addSubscription() throws InvalidSubscriptionException, SQLException, ParseException {
-        int userId     = readIntSafe("  User ID: ");
+        int userId = readIntSafe("  User ID: ");
         int categoryId = readIntSafe("  Category ID: ");
         System.out.print("  Service Name: ");
         String service = scanner.nextLine();
-        double cost    = readDoubleSafe("  Monthly Cost (Rs.): ");
+        double cost = readDoubleSafe("  Monthly Cost (Rs.): ");
         System.out.print("  Start Date (yyyy-MM-dd): ");
         Date startDate = DateUtils.parseDate(scanner.nextLine().trim());
-        int alertDays  = readIntSafe("  Alert Days Before Renewal: ");
+        int alertDays = readIntSafe("  Alert Days Before Renewal: ");
         System.out.print("  Status (ACTIVE/PAUSED/CANCELLED): ");
-        String status  = scanner.nextLine().trim();
+        String status = scanner.nextLine().trim();
 
         subscriptionService.addSubscription(userId, categoryId, service, cost, startDate, alertDays, status);
         System.out.println("  [OK] Subscription added! Renewal date set automatically by trigger.");
@@ -257,8 +304,7 @@ public class Main {
                     String.format("Rs. %.2f", s.getCost()),
                     DateUtils.formatDate(s.getStartDate()),
                     DateUtils.formatDate(s.getNextRenewalDate()),
-                    s.getStatus()
-            ));
+                    s.getStatus()));
         }
         System.out.println(StringUtils.buildTableSeparator(6));
     }
@@ -269,15 +315,18 @@ public class Main {
 
         System.out.print("  New Service Name (current: " + sub.getServiceName() + "): ");
         String service = scanner.nextLine();
-        if (!service.trim().isEmpty()) sub.setServiceName(service.trim());
+        if (!service.trim().isEmpty())
+            sub.setServiceName(service.trim());
 
         System.out.print("  New Cost (current: " + sub.getCost() + "): ");
         String costStr = scanner.nextLine();
-        if (!costStr.trim().isEmpty()) sub.setCost(Double.parseDouble(costStr.trim()));
+        if (!costStr.trim().isEmpty())
+            sub.setCost(Double.parseDouble(costStr.trim()));
 
-        System.out.print("  New Status (current: " + sub.getStatus() + "): ");
+        System.out.print("  New Status (current: " + sub.getStatus() + "), options (ACTIVE/PAUSED/CANCELLED): ");
         String status = scanner.nextLine();
-        if (!status.trim().isEmpty()) sub.setStatus(status.trim().toUpperCase());
+        if (!status.trim().isEmpty())
+            sub.setStatus(status.trim().toUpperCase());
 
         subscriptionService.updateSubscription(sub);
         System.out.println("  [OK] Subscription updated.");
@@ -299,7 +348,7 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  3. PAYMENT MANAGEMENT
+    // 3. PAYMENT MANAGEMENT
     // ══════════════════════════════════════════════════════════
     private static void paymentMenu() {
         boolean back = false;
@@ -314,12 +363,23 @@ public class Main {
             int choice = readIntSafe("Choose: ");
             try {
                 switch (choice) {
-                    case 1: recordPayment();      break;
-                    case 2: viewPaymentsBySub();   break;
-                    case 3: viewAllPayments();     break;
-                    case 4: deletePayment();       break;
-                    case 0: back = true;           break;
-                    default: System.out.println("[!] Invalid option.");
+                    case 1:
+                        recordPayment();
+                        break;
+                    case 2:
+                        viewPaymentsBySub();
+                        break;
+                    case 3:
+                        viewAllPayments();
+                        break;
+                    case 4:
+                        deletePayment();
+                        break;
+                    case 0:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("[!] Invalid option.");
                 }
             } catch (SQLException e) {
                 System.out.println("[DB ERROR] " + e.getMessage());
@@ -330,12 +390,12 @@ public class Main {
     }
 
     private static void recordPayment() throws SQLException, ParseException {
-        int subId       = readIntSafe("  Subscription ID: ");
-        double amount   = readDoubleSafe("  Amount (Rs.): ");
+        int subId = readIntSafe("  Subscription ID: ");
+        double amount = readDoubleSafe("  Amount (Rs.): ");
         System.out.print("  Payment Date (yyyy-MM-dd): ");
-        Date date       = DateUtils.parseDate(scanner.nextLine().trim());
+        Date date = DateUtils.parseDate(scanner.nextLine().trim());
         System.out.print("  Payment Method (UPI/Card/NetBanking/Cash): ");
-        String method   = scanner.nextLine().trim();
+        String method = scanner.nextLine().trim();
         paymentService.recordPayment(subId, amount, date, method);
         System.out.println("  [OK] Payment recorded.");
     }
@@ -356,8 +416,7 @@ public class Main {
                     String.valueOf(p.getSubscriptionId()),
                     String.format("Rs. %.2f", p.getAmount()),
                     DateUtils.formatDate(p.getPaymentDate()),
-                    p.getPaymentMethod()
-            ));
+                    p.getPaymentMethod()));
         }
         System.out.println(StringUtils.buildTableSeparator(5));
     }
@@ -377,8 +436,7 @@ public class Main {
                     String.valueOf(p.getSubscriptionId()),
                     String.format("Rs. %.2f", p.getAmount()),
                     DateUtils.formatDate(p.getPaymentDate()),
-                    p.getPaymentMethod()
-            ));
+                    p.getPaymentMethod()));
         }
         System.out.println(StringUtils.buildTableSeparator(5));
     }
@@ -390,7 +448,7 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  4. CATEGORY MANAGEMENT
+    // 4. CATEGORY MANAGEMENT
     // ══════════════════════════════════════════════════════════
     private static void categoryMenu() {
         boolean back = false;
@@ -404,11 +462,20 @@ public class Main {
             int choice = readIntSafe("Choose: ");
             try {
                 switch (choice) {
-                    case 1: addCategory();      break;
-                    case 2: viewCategories();    break;
-                    case 3: deleteCategory();    break;
-                    case 0: back = true;         break;
-                    default: System.out.println("[!] Invalid option.");
+                    case 1:
+                        addCategory();
+                        break;
+                    case 2:
+                        viewCategories();
+                        break;
+                    case 3:
+                        deleteCategory();
+                        break;
+                    case 0:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("[!] Invalid option.");
                 }
             } catch (SQLException e) {
                 System.out.println("[DB ERROR] " + e.getMessage());
@@ -431,17 +498,17 @@ public class Main {
             System.out.println("  No categories found.");
             return;
         }
-        System.out.println(StringUtils.buildTableSeparator(3));
-        System.out.println(StringUtils.buildTableRow("ID", "Name", "Description"));
-        System.out.println(StringUtils.buildTableSeparator(3));
+        int[] colWidths = { 6, 20, 50 };
+        System.out.println(StringUtils.buildTableSeparator(colWidths));
+        System.out.println(StringUtils.buildTableRow(colWidths, "ID", "Name", "Description"));
+        System.out.println(StringUtils.buildTableSeparator(colWidths));
         for (Category c : cats) {
-            System.out.println(StringUtils.buildTableRow(
+            System.out.println(StringUtils.buildTableRow(colWidths,
                     String.valueOf(c.getCategoryId()),
                     c.getCategoryName(),
-                    c.getDescription() != null ? c.getDescription() : ""
-            ));
+                    c.getDescription() != null ? c.getDescription() : ""));
         }
-        System.out.println(StringUtils.buildTableSeparator(3));
+        System.out.println(StringUtils.buildTableSeparator(colWidths));
     }
 
     private static void deleteCategory() throws SQLException {
@@ -451,7 +518,7 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  5. ALERT MANAGEMENT
+    // 5. ALERT MANAGEMENT
     // ══════════════════════════════════════════════════════════
     private static void alertMenu() {
         boolean back = false;
@@ -467,13 +534,26 @@ public class Main {
             int choice = readIntSafe("Choose: ");
             try {
                 switch (choice) {
-                    case 1: createAlert();         break;
-                    case 2: viewAlertsBySub();      break;
-                    case 3: viewAllAlerts();        break;
-                    case 4: markAlertSent();        break;
-                    case 5: deleteAlert();          break;
-                    case 0: back = true;            break;
-                    default: System.out.println("[!] Invalid option.");
+                    case 1:
+                        createAlert();
+                        break;
+                    case 2:
+                        viewAlertsBySub();
+                        break;
+                    case 3:
+                        viewAllAlerts();
+                        break;
+                    case 4:
+                        markAlertSent();
+                        break;
+                    case 5:
+                        deleteAlert();
+                        break;
+                    case 0:
+                        back = true;
+                        break;
+                    default:
+                        System.out.println("[!] Invalid option.");
                 }
             } catch (SQLException e) {
                 System.out.println("[DB ERROR] " + e.getMessage());
@@ -522,8 +602,7 @@ public class Main {
                     String.valueOf(a.getSubscriptionId()),
                     a.getAlertMessage(),
                     DateUtils.formatDate(a.getAlertDate()),
-                    a.isSent() ? "Yes" : "No"
-            ));
+                    a.isSent() ? "Yes" : "No"));
         }
         System.out.println(StringUtils.buildTableSeparator(5));
     }
@@ -541,25 +620,73 @@ public class Main {
     }
 
     // ══════════════════════════════════════════════════════════
-    //  6. MONTHLY EXPENSE REPORT (Stored Procedure)
+    // 6. MONTHLY EXPENSE REPORT (Stored Procedure)
     // ══════════════════════════════════════════════════════════
     private static void monthlyExpenseReport() {
-        int userId = readIntSafe("  Enter User ID: ");
+        System.out.println("\n--- Monthly Expense Report ---");
+        System.out.println("  1. Expense for a particular User");
+        System.out.println("  2. Expense for all Users (Table format)");
+        int choice = readIntSafe("Choose option: ");
+
         try {
-            double total = subscriptionService.getMonthlyExpense(userId);
-            System.out.println("\n  ╔═══════════════════════════════════╗");
-            System.out.println("  ║   Monthly Expense Report          ║");
-            System.out.println("  ╠═══════════════════════════════════╣");
-            System.out.println("  ║   User ID : " + StringUtils.padRight(String.valueOf(userId), 20) + "  ║");
-            System.out.println("  ║   Total   : Rs. " + StringUtils.padRight(String.format("%.2f", total), 16) + "  ║");
-            System.out.println("  ╚═══════════════════════════════════╝");
+            if (choice == 1) {
+                int userId = readIntSafe("  Enter User ID: ");
+                double total = subscriptionService.getMonthlyExpense(userId);
+                System.out.println("\n  ╔═══════════════════════════════════╗");
+                System.out.println("  ║   Monthly Expense Report          ║");
+                System.out.println("  ╠═══════════════════════════════════╣");
+                System.out.println("  ║   User ID : " + StringUtils.padRight(String.valueOf(userId), 20) + "  ║");
+                System.out.println("  ║   Total   : Rs. " + StringUtils.padRight(String.format("%.2f", total), 16) + "  ║");
+                System.out.println("  ╚═══════════════════════════════════╝");
+            } else if (choice == 2) {
+                java.util.Map<Integer, Double> expenses = subscriptionService.getAllUsersMonthlyExpense();
+                if (expenses.isEmpty()) {
+                    System.out.println("  No active subscriptions found.");
+                } else {
+                    int[] colWidths = { 10, 20 };
+                    System.out.println("\n  " + StringUtils.buildTableSeparator(colWidths));
+                    System.out.println("  " + StringUtils.buildTableRow(colWidths, "User ID", "Total Expense (Rs.)"));
+                    System.out.println("  " + StringUtils.buildTableSeparator(colWidths));
+                    for (java.util.Map.Entry<Integer, Double> entry : expenses.entrySet()) {
+                        System.out.println("  " + StringUtils.buildTableRow(colWidths, 
+                                String.valueOf(entry.getKey()), 
+                                String.format("%.2f", entry.getValue())));
+                    }
+                    System.out.println("  " + StringUtils.buildTableSeparator(colWidths));
+                }
+            } else {
+                System.out.println("  [!] Invalid option.");
+            }
         } catch (SQLException e) {
             System.out.println("[DB ERROR] " + e.getMessage());
         }
     }
 
     // ══════════════════════════════════════════════════════════
-    //  INPUT HELPERS (safe reading with error recovery)
+    // 7. DAYS UNTIL RENEWAL (MySQL Function)
+    // ══════════════════════════════════════════════════════════
+    private static void daysUntilRenewal() {
+        System.out.println("\n--- Days Until Renewal (MySQL Function) ---");
+        int subId = readIntSafe("  Enter Subscription ID: ");
+        try {
+            int days = subscriptionService.getDaysUntilRenewal(subId);
+            System.out.println("\n  ╔═══════════════════════════════════════╗");
+            System.out.println("  ║   Days Until Renewal                  ║");
+            System.out.println("  ╠═══════════════════════════════════════╣");
+            System.out.println("  ║   Subscription ID : " + StringUtils.padRight(String.valueOf(subId), 16) + "  ║");
+            if (days >= 0) {
+                System.out.println("  ║   Days Remaining  : " + StringUtils.padRight(String.valueOf(days), 16) + "  ║");
+            } else {
+                System.out.println("  ║   Status          : " + StringUtils.padRight("Expired / N/A", 16) + "  ║");
+            }
+            System.out.println("  ╚═══════════════════════════════════════╝");
+        } catch (SQLException e) {
+            System.out.println("[DB ERROR] " + e.getMessage());
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // INPUT HELPERS (safe reading with error recovery)
     // ══════════════════════════════════════════════════════════
 
     /**

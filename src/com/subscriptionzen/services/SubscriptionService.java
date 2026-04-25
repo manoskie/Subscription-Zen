@@ -117,4 +117,19 @@ public class SubscriptionService {
     public double getMonthlyExpense(int userId) throws SQLException {
         return subscriptionDAO.getMonthlyExpense(userId);
     }
+
+    /**
+     * Calls the stored procedure to get total monthly expense for all users.
+     */
+    public java.util.Map<Integer, Double> getAllUsersMonthlyExpense() throws SQLException {
+        return subscriptionDAO.getAllUsersMonthlyExpense();
+    }
+
+    /**
+     * Calls the MySQL function fn_days_until_renewal to get days remaining
+     * until the next renewal date for a given subscription.
+     */
+    public int getDaysUntilRenewal(int subscriptionId) throws SQLException {
+        return subscriptionDAO.getDaysUntilRenewal(subscriptionId);
+    }
 }

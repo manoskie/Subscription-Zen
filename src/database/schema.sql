@@ -112,9 +112,43 @@ END$$
 
 DELIMITER ;
 
+-- ============================================================
+-- 3a. STORED PROCEDURE — Monthly expense for all users
+-- ============================================================
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_get_all_users_monthly_expense()
+BEGIN
+    SELECT USER_ID, IFNULL(SUM(COST), 0.00) AS TOTAL_EXPENSE
+    FROM   SUBSCRIPTION
+    WHERE  STATUS = 'ACTIVE'
+    GROUP BY USER_ID;
+END$$
+
+DELIMITER ;
 
 -- ============================================================
--- 4. SEED DATA
+-- 4. FUNCTION — Days until next renewal for a subscription
+-- ============================================================
+
+DELIMITER $$
+
+CREATE FUNCTION fn_days_until_renewal(p_subscription_id INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE days_left INT;
+    SELECT DATEDIFF(NEXT_RENEWAL_DATE, CURDATE()) INTO days_left
+    FROM SUBSCRIPTION
+    WHERE SUBSCRIPTION_ID = p_subscription_id;
+    RETURN IFNULL(days_left, -1);
+END$$
+
+DELIMITER ;
+
+-- ============================================================
+-- 5. SEED DATA
 -- ============================================================
 
 -- Default categories
