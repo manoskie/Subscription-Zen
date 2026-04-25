@@ -41,6 +41,42 @@ public class StringUtils {
     }
 
     /**
+     * Builds a separator line with custom column widths.
+     *
+     * @param columnWidths width for each column
+     * @return separator string
+     */
+    public static String buildTableSeparator(int[] columnWidths) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("+");
+        for (int width : columnWidths) {
+            for (int i = 0; i < width + 2; i++) {
+                sb.append('-');
+            }
+            sb.append("+");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Builds a formatted table row with custom column widths.
+     *
+     * @param columnWidths width for each column
+     * @param columns      the column values
+     * @return formatted row string
+     */
+    public static String buildTableRow(int[] columnWidths, String... columns) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("| ");
+        for (int i = 0; i < columns.length; i++) {
+            int width = (i < columnWidths.length) ? columnWidths[i] : 20;
+            sb.append(padRight(columns[i], width));
+            sb.append(" | ");
+        }
+        return sb.toString();
+    }
+
+    /**
      * Parses a comma-separated string into an array of trimmed tokens
      * using StringTokenizer.
      *

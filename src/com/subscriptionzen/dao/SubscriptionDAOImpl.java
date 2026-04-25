@@ -61,7 +61,7 @@ public class SubscriptionDAOImpl extends BaseDAO implements SubscriptionDAO {
             }
             return null;
         } catch (SQLException e) {
-            System.err.println("[ERROR] Failed to find subscription: " + e.getMessage());
+            System.err.println("[ERROR] Failed to finx  d subscription: " + e.getMessage());
             throw e;
         } finally {
             closeResources(conn, pstmt, rs);
@@ -184,6 +184,56 @@ public class SubscriptionDAOImpl extends BaseDAO implements SubscriptionDAO {
             throw e;
         } finally {
             closeResources(conn, cstmt);
+        }
+    }
+
+    @Override
+    public java.util.Map<Integer, Double> getAllUsersMonthlyExpense() throws SQLException {
+        String sql = "{CALL sp_get_all_users_monthly_expense()}";
+        Connection conn = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        java.util.Map<Integer, Double> result = new java.util.HashMap<>();
+        try {
+            conn = DatabaseConfig.getConnection();
+            cstmt = conn.prepareCall(sql);
+            rs = cstmt.executeQuery();
+            while (rs.next()) {
+                result.put(rs.getInt("USER_ID"), rs.getDouble("TOTAL_EXPENSE"));
+            }
+            return result;
+        } catch (SQLException e) {
+            System.err.println("[ERROR] Failed to get all users monthly expense: " + e.getMessage());
+            throw e;
+        } finally {
+            closeResources(conn, cstmt, rs);
+        }
+    }
+
+    /**
+     * Calls the MySQL function fn_days_until_renewal.
+     * Demonstrates: Using a MySQL FUNCTION via a SELECT statement.
+     */
+    @Override
+    public int getDaysUntilRenewal(int subscriptionId) throws SQLException {
+        String sql = "SELECT fn_days_until_renewal(?) AS days_left";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = DatabaseConfig.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, subscriptionId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("days_left");
+            }
+            return -1;
+        } catch (SQLException e) {
+            System.err.println("[ERROR] Failed to get days until renewal: " + e.getMessage());
+            throw e;
+        } finally {
+            closeResources(conn, pstmt, rs);
         }
     }
 
